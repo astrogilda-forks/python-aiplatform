@@ -26,6 +26,7 @@ except ImportError as e:  # pragma: NO COVER
         "`rest_asyncio` transport requires the library to be installed with the `async_rest` extra. Install the library with the `async_rest` extra using `pip install google-cloud-aiplatform[async_rest]`"
     ) from e
 
+from google.auth import credentials as ga_credentials  # type: ignore
 from google.auth.aio import credentials as ga_credentials_async  # type: ignore
 
 from google.api_core import exceptions as core_exceptions
@@ -1142,7 +1143,9 @@ class AsyncFeatureOnlineStoreAdminServiceRestTransport(
         self,
         *,
         host: str = "aiplatform.googleapis.com",
-        credentials: Optional[ga_credentials_async.Credentials] = None,
+        credentials: Optional[
+            Union[ga_credentials.Credentials, ga_credentials_async.Credentials]
+        ] = None,
         client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
         url_scheme: str = "https",
         interceptor: Optional[
@@ -1154,7 +1157,7 @@ class AsyncFeatureOnlineStoreAdminServiceRestTransport(
         Args:
             host (Optional[str]):
                  The hostname to connect to (default: 'aiplatform.googleapis.com').
-            credentials (Optional[google.auth.aio.credentials.Credentials]): The
+            credentials (Optional[Union[google.auth.credentials.Credentials, google.auth.aio.credentials.Credentials]]): The
                 authorization credentials to attach to requests. These
                 credentials identify the application to the service; if none
                 are specified, the client will attempt to ascertain the

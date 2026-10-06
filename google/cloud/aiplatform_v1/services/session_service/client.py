@@ -89,14 +89,12 @@ from .transports.grpc import SessionServiceGrpcTransport
 from .transports.grpc_asyncio import SessionServiceGrpcAsyncIOTransport
 from .transports.rest import SessionServiceRestTransport
 
-ASYNC_REST_EXCEPTION = None
 try:
     from .transports.rest_asyncio import AsyncSessionServiceRestTransport
 
-    HAS_ASYNC_REST_DEPENDENCIES = True
-except ImportError as e:  # pragma: NO COVER
+    HAS_ASYNC_REST_DEPENDENCIES = True  # pragma: NO COVER
+except ImportError:  # pragma: NO COVER
     HAS_ASYNC_REST_DEPENDENCIES = False
-    ASYNC_REST_EXCEPTION = e
 
 
 class SessionServiceClientMeta(type):
@@ -133,7 +131,9 @@ class SessionServiceClientMeta(type):
         if (
             label == "rest_asyncio" and not HAS_ASYNC_REST_DEPENDENCIES
         ):  # pragma: NO COVER
-            raise ASYNC_REST_EXCEPTION
+            raise ImportError(
+                "`rest_asyncio` transport requires the library to be installed with the `async_rest` extra. Install the library with the `async_rest` extra using `pip install google-cloud-aiplatform[async_rest]`"
+            )
         if label:
             return cls._transport_registry[label]
 
@@ -627,7 +627,7 @@ class SessionServiceClient(metaclass=SessionServiceClientMeta):
                 else cast(Callable[..., SessionServiceTransport], transport)
             )
 
-            if "rest_asyncio" in str(transport_init):
+            if "rest_asyncio" in str(transport_init):  # pragma: NO COVER
                 unsupported_params = {
                     "google.api_core.client_options.ClientOptions.credentials_file": self._client_options.credentials_file,
                     "google.api_core.client_options.ClientOptions.scopes": self._client_options.scopes,
